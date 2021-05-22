@@ -1,104 +1,58 @@
-import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  ActivityIndicator,
-  Image,
-} from "react-native";
+import "react-native-gesture-handler";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import {
   useFonts,
   Montserrat_600SemiBold,
   Montserrat_400Regular,
 } from "@expo-google-fonts/montserrat";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import MosquesPage from "./pages/MosquesPage";
+import PrayerTimesPage from "./pages/PrayerTimesPage";
+import React from "react";
 
-const Mosque = ({ name, imageUrl, address }) => (
-  <View style={{ flexDirection: "row", marginVertical: 18 }}>
-    <View style={styles.logo}>
-      <Image style={styles.image} source={{ uri: imageUrl }} />
-    </View>
-    <View style={{ paddingLeft: 12 }}>
-      <Text
-        style={{
-          marginBottom: 8,
-          fontFamily: "Montserrat_600SemiBold",
-          fontWeight: "600",
-          fontSize: 20,
-        }}
-      >
-        {name}
-      </Text>
-      <Text
-        style={{
-          fontFamily: "Montserrat_400Regular",
-          fontSize: 12,
-        }}
-      >
-        {address}
-      </Text>
-    </View>
-  </View>
-);
+const Stack = createStackNavigator();
 
 export default function App() {
-  const [isLoading, setLoading] = useState(true);
-  const [mosques, setMosques] = useState([]);
   let [fontsLoaded] = useFonts({
     Montserrat_600SemiBold,
     Montserrat_400Regular,
   });
 
-  const getMosques = async () => {
-    try {
-      let response = await fetch("https://304256f44f19.ngrok.io/mosques");
-      let json = await response.json();
-      setMosques(json);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getMosques();
-  }, []);
-
-  return (
-    <View style={styles.list}>
-      {isLoading || !fontsLoaded ? (
-        <ActivityIndicator />
-      ) : (
-        <FlatList
-          data={mosques}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => (
-            <Mosque
-              name={item.name}
-              imageUrl={item.imageUrl}
-              address={item.address}
-            ></Mosque>
-          )}
-        />
-      )}
+  return !fontsLoaded ? (
+    <View style={[styles.center]}>
+      <ActivityIndicator size="large" />
     </View>
+  ) : (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={MosquesPage}
+          options={{ headerTitle: null, headerStyle: styles.emptyHeader }}
+        />
+        <Stack.Screen
+          name="Prayer Times"
+          component={PrayerTimesPage}
+          options={{ headerTitle: null, headerStyle: styles.emptyHeader }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   list: {
     flex: 1,
-    padding: 24,
-    marginTop: 60,
+    backgroundColor: "white",
   },
-  logo: {
-    width: 66,
-    height: 58,
-  },
-  image: {
+  center: {
     flex: 1,
-    width: null,
-    height: null,
-    resizeMode: "contain",
+    justifyContent: "center",
+  },
+  emptyHeader: {
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 0,
   },
 });
