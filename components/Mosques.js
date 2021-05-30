@@ -24,7 +24,13 @@ const Mosque = ({ name, imageUrl, address, onPress }) => {
     <TouchableHighlight underlayColor="#DDDDDD" onPress={onPress}>
       <View style={styles.item}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={{ uri: imageUrl }} />
+          <Image
+            style={styles.image}
+            source={{ uri: imageUrl ? imageUrl : undefined }}
+            defaultSource={{
+              uri: "/Users/yaser/Projects/iqama-app/assets/mosque_placeholder.png",
+            }}
+          />
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.name}>{name}</Text>
@@ -34,7 +40,6 @@ const Mosque = ({ name, imageUrl, address, onPress }) => {
     </TouchableHighlight>
   );
 };
-
 
 const styles = StyleSheet.create({
   item: {

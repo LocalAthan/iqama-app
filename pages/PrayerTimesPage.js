@@ -54,7 +54,10 @@ const PrayerTimesPage = ({ route }) => {
             height: null,
             resizeMode: "contain",
           }}
-          source={{ uri: mosque.imageUrl }}
+          source={{ uri: mosque.imageUrl ? mosque.imageUrl : undefined }}
+          defaultSource={{
+            uri: "/Users/yaser/Projects/iqama-app/assets/mosque_placeholder.png",
+          }}
         />
       </View>
       <View style={styles.table}>
