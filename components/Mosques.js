@@ -4,7 +4,7 @@ import { View, Text, Image, FlatList, StyleSheet } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import typography from "../styles/typography";
 
-const Mosques = ({ mosques, onItemPress }) => (
+const Mosques = ({ mosques, onItemPress, onItemAddressPress }) => (
   <FlatList
     data={mosques}
     keyExtractor={(item) => String(item.id)}
@@ -14,12 +14,13 @@ const Mosques = ({ mosques, onItemPress }) => (
         imageUrl={item.imageUrl}
         address={item.address}
         onPress={() => onItemPress(item)}
+        onAddressPress={() => onItemAddressPress(item)}
       ></Mosque>
     )}
   />
 );
 
-const Mosque = ({ name, imageUrl, address, onPress }) => {
+const Mosque = ({ name, imageUrl, address, onPress, onAddressPress }) => {
   return (
     <TouchableHighlight underlayColor="#DDDDDD" onPress={onPress}>
       <View style={styles.item}>
@@ -34,7 +35,9 @@ const Mosque = ({ name, imageUrl, address, onPress }) => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.address}>{address}</Text>
+          <TouchableHighlight underlayColor="#DDDDDD" onPress={onAddressPress}>
+            <Text style={styles.address}>{address}</Text>
+          </TouchableHighlight>
         </View>
       </View>
     </TouchableHighlight>

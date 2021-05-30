@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Linking, Platform, StyleSheet, View } from "react-native";
 import Mosques from "../components/Mosques";
 import { API_URL } from "@env";
 
@@ -17,6 +17,11 @@ const MosquesPage = ({ navigation }) => {
     fetchData();
   }, []);
 
+  const openMaps = (address) => {
+    const company = Platform.OS === "ios" ? "apple" : "google";
+    Linking.openURL(`http://maps.${company}.com/maps?daddr=${address}`);
+  };
+
   return (
     <View style={styles.list}>
       {isLoading ? (
@@ -27,6 +32,7 @@ const MosquesPage = ({ navigation }) => {
           onItemPress={(item) =>
             navigation.push("Prayer Times", { mosque: item })
           }
+          onItemAddressPress={(item) => openMaps(item.address)}
         ></Mosques>
       )}
     </View>
