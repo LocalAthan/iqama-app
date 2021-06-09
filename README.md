@@ -1,11 +1,13 @@
 # :mosque: Iqama App
-Shows the prayer times for mosques in Edmonton
+React-native project to show the prayer times for different mosques in Edmonton. 
 
 ### Requirements
 
-1. [nodejs](https://nodejs.org/en/) as this is a react-native project
-2. The iqama-scraper [project](https://github.com/LocalAthan/iqama-app) to serve the app
-3. [ngrok](https://ngrok.com/) for urls to localhost server
+1. [nodejs](https://nodejs.org/en/)
+2. Expo CLI
+   `npm install -g expo-cli` 
+4. The iqama-scraper [project](https://github.com/LocalAthan/iqama-app) (to serve the app)
+5. [ngrok](https://ngrok.com/) (to generate public urls to localhost)
 
 ### Getting Started
 After cloning project:
@@ -18,9 +20,14 @@ After cloning project:
    `npm install`
 5. run
    `npm start`
+6. Scan the QR code that pops with Expo Go app on Android or the Camera app on iOS
 
 
 #### Note
-Download [XCode](https://developer.apple.com/download/more/?=xcode) to run on iOS simulator or dowload [Android Studio](https://developer.android.com/studio) for an Android simulator. 
+If you want to test using simulators, you need to download
 
-*This step isn't necessary as you can scan a QR code after `npm start` and open the app with Expo Go on Android or the iOS Camera app*
+a) Download [XCode](https://developer.apple.com/download/more/?=xcode) to run on iOS simulator or
+
+b) Download [Android Studio](https://developer.android.com/studio) for an Android simulator. 
+
+*This step isn't necessary*
