@@ -6,6 +6,8 @@ import {
   FlatList,
   Text,
   Image,
+  Linking,
+  Platform,
 } from "react-native";
 import {
   useFonts,
@@ -48,11 +50,16 @@ export default function App() {
     }
   };
 
+  const onGoNowPressed = (address) => {
+    const company = Platform.OS === "ios" ? "apple" : "google";
+    Linking.openURL(`http://maps.${company}.com/maps?daddr=${address}`);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await getMosques();
       setMosques(result);
-      setCurrentMosque(result[0])
+      setCurrentMosque(result[0]);
       setLoading(false);
     };
 
@@ -63,7 +70,7 @@ export default function App() {
     //TODO: fetch prayer times
     const fetchData = async () => {
       const result = await getPrayerTimes(currentMosque.id);
-      setPrayerTimes(result)
+      setPrayerTimes(result);
       setLoading(false);
     };
 
@@ -76,67 +83,32 @@ export default function App() {
     </View>
   ) : (
     <View style={styles.container}>
-      <View style={{ marginTop: 54, flex: 1 }}>
-        <View style={{ backgroundColor: "white" }}>
-          <View
-            style={{
-              marginVertical: 12,
-              marginHorizontal: 24,
-            }}
-          >
-            <Text
-              style={{
-                marginVertical: 12,
-                fontFamily: typography.FONT_FAMILY_REGULAR,
-                fontSize: typography.FONT_SIZE_LARGE,
-              }}
+      <View style={styles.prayerBoxContainer}>
+        <View style={styles.prayerBox}>
+          <View style={styles.prayerBoxInfo}>
+            <Text style={styles.prayerBoxMosque}>{currentMosque?.name}</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.prayerType}>Athan:</Text>
+              <Text style={styles.prayerTime}>{prayerTimes?.fajr.athan}</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.prayerType}>Iqama:</Text>
+              <Text style={styles.prayerTime}>{prayerTimes?.fajr.iqama}</Text>
+            </View>
+            <TouchableHighlight
+              underlayColor="white"
+              onPress={() => onGoNowPressed(currentMosque.address)}
             >
-              {currentMosque?.name}
-            </Text>
-            <View style={{ flexDirection: "row" }}>
-              <Text
-                style={{
-                  flex: 1,
-                  marginVertical: 12,
-                  fontFamily: typography.FONT_FAMILY_REGULAR,
-                  fontSize: typography.FONT_SIZE_LARGE,
-                }}
-              >
-                Athan:
-              </Text>
-              <Text
-                style={{
-                  flex: 3,
-                  marginVertical: 12,
-                  fontFamily: typography.FONT_FAMILY_BOLD,
-                  fontSize: typography.FONT_SIZE_LARGE,
-                }}
-              >
-                {prayerTimes?.fajr.athan}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text
-                style={{
-                  flex: 1,
-                  marginVertical: 12,
-                  fontFamily: typography.FONT_FAMILY_REGULAR,
-                  fontSize: typography.FONT_SIZE_LARGE,
-                }}
-              >
-                Iqama:
-              </Text>
-              <Text
-                style={{
-                  flex: 3,
-                  marginVertical: 12,
-                  fontFamily: typography.FONT_FAMILY_BOLD,
-                  fontSize: typography.FONT_SIZE_LARGE,
-                }}
-              >
-                {prayerTimes?.fajr.iqama}
-              </Text>
-            </View>
+              <View style={styles.goNowButton}>
+                <Text style={styles.goNowText}>Go now</Text>
+                <Image
+                  style={styles.openLinkImage}
+                  source={{
+                    uri: "/Users/yaser/Projects/iqama-app/assets/open-link.png",
+                  }}
+                ></Image>
+              </View>
+            </TouchableHighlight>
           </View>
         </View>
       </View>
@@ -202,7 +174,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
   },
   mosqueItem: {
     flexDirection: "row",
@@ -244,4 +215,48 @@ const styles = StyleSheet.create({
     height: 15,
     resizeMode: "contain",
   },
+  prayerBoxContainer: { marginTop: 54, flex: 1 },
+  prayerBox: {
+    backgroundColor: "white",
+    marginTop: 54,
+    marginHorizontal: 8,
+    borderRadius: 25,
+  },
+  prayerBoxInfo: {
+    marginVertical: 12,
+    marginHorizontal: 24,
+  },
+  prayerBoxMosque: {
+    marginVertical: 12,
+    fontFamily: typography.FONT_FAMILY_REGULAR,
+    fontSize: typography.FONT_SIZE_LARGE,
+  },
+  prayerType: {
+    flex: 1,
+    marginVertical: 12,
+    fontFamily: typography.FONT_FAMILY_REGULAR,
+    fontSize: typography.FONT_SIZE_LARGE,
+  },
+  prayerTime: {
+    flex: 3,
+    marginVertical: 12,
+    fontFamily: typography.FONT_FAMILY_BOLD,
+    fontSize: typography.FONT_SIZE_LARGE,
+  },
+  goNowButton: {
+    flexDirection: "row",
+    marginVertical: 12,
+    height: 52,
+    backgroundColor: "#F8F8F8",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+  },
+  goNowText: {
+    marginVertical: 12,
+    fontSize: typography.FONT_SIZE_LARGE,
+    fontWeight: "bold",
+    color: "#6A6A6A",
+  },
+  openLinkImage: { marginLeft: 12, width: 15, height: 15 },
 });
