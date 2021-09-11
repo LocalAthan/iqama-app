@@ -52,7 +52,7 @@ export default function App() {
     }
   };
 
-  const onGoNowPressed = (address) => {
+  const onGetDirectionsPressed = (address) => {
     const company = Platform.OS === "ios" ? "apple" : "google";
     Linking.openURL(`http://maps.${company}.com/maps?daddr=${address}`);
   };
@@ -151,16 +151,10 @@ export default function App() {
             </View>
             <TouchableHighlight
               underlayColor="white"
-              onPress={() => onGoNowPressed(currentMosque.address)}
+              onPress={() => onGetDirectionsPressed(currentMosque.address)}
             >
-              <View style={styles.goNowButton}>
-                <Text style={styles.goNowText}>Go now</Text>
-                <Image
-                  style={styles.openLinkImage}
-                  source={{
-                    uri: "/Users/yaser/Projects/iqama-app/assets/open-link.png",
-                  }}
-                ></Image>
+              <View style={styles.getDirectionsButton}>
+                <Text style={styles.getDirectionsText}>Get Directions</Text>
               </View>
             </TouchableHighlight>
           </View>
@@ -293,7 +287,7 @@ const styles = StyleSheet.create({
   },
   prayerTimeContainer: {
     justifyContent: "center",
-    flex: 4,
+    flex: 3.5,
     marginVertical: 16,
   },
   prayerTime: {
@@ -301,7 +295,7 @@ const styles = StyleSheet.create({
     fontFamily: typography.FONT_FAMILY_BOLD,
     fontSize: typography.FONT_SIZE_LARGE,
   },
-  goNowButton: {
+  getDirectionsButton: {
     flexDirection: "row",
     marginTop: 16,
     marginBottom: 12,
@@ -311,7 +305,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 25,
   },
-  goNowText: {
+  getDirectionsText: {
     marginVertical: 12,
     fontSize: typography.FONT_SIZE_LARGE,
     fontWeight: "bold",
