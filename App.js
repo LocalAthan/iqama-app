@@ -18,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import { API_URL } from "@env";
 import typography from "./styles/typography";
 import { TouchableHighlight } from "react-native-gesture-handler";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -25,7 +26,7 @@ export default function App() {
     Montserrat_400Regular,
   });
 
-  const [isLoading, setLoading] = useState(true);
+  const [isPrayersLoading, setisPrayersLoading] = useState(true);
   const [mosques, setMosques] = useState([]);
   const [currentMosque, setCurrentMosque] = useState();
   const [prayerTimes, setPrayerTimes] = useState();
@@ -61,7 +62,7 @@ export default function App() {
       const result = await getMosques();
       setMosques(result);
       setCurrentMosque(result[0]);
-      setLoading(false);
+      setisPrayersLoading(false);
     };
 
     fetchData();
@@ -70,22 +71,23 @@ export default function App() {
   useEffect(() => {
     //TODO: fetch prayer times
     const fetchData = async () => {
+      setisPrayersLoading(true);
       const result = await getPrayerTimes(currentMosque.id);
       setPrayerTimes(result);
-      setLoading(false);
+      setisPrayersLoading(false);
     };
 
     fetchData();
   }, [currentMosque]);
 
   //TODO: make prayerTimes, currentMosque non-nullable
-  const prayersMap = {
-    "Fajr": prayerTimes?.fajr,
-    "Dhuhr": prayerTimes?.dhuhr,
-    "Asr": prayerTimes?.asr,
-    "Maghrib": prayerTimes?.maghrib,
-    "Isha": prayerTimes?.isha
-  }
+  const prayers = {
+    Fajr: prayerTimes?.fajr,
+    Dhuhr: prayerTimes?.dhuhr,
+    Asr: prayerTimes?.asr,
+    Maghrib: prayerTimes?.maghrib,
+    Isha: prayerTimes?.isha,
+  };
 
   return !fontsLoaded ? (
     <View style={[styles.center]}>
@@ -98,7 +100,7 @@ export default function App() {
           <View style={styles.prayerBoxInfo}>
             <Text style={styles.prayerBoxMosque}>{currentMosque?.name}</Text>
             <FlatList
-              data={Object.keys(prayersMap)}
+              data={Object.keys(prayers)}
               renderItem={({ item: prayerName }) => (
                 <TouchableHighlight
                   underlayColor="white"
@@ -127,15 +129,25 @@ export default function App() {
             ></FlatList>
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.prayerCall}>Athan:</Text>
-              <Text style={styles.prayerTime}>
-                {prayersMap[currentPrayer]?.athan}
-              </Text>
+              <ShimmerPlaceholder
+                style={styles.prayerTimeContainer}
+                visible={!isPrayersLoading}
+              >
+                <Text style={styles.prayerTime}>
+                  {prayers[currentPrayer]?.athan}
+                </Text>
+              </ShimmerPlaceholder>
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.prayerCall}>Iqama:</Text>
-              <Text style={styles.prayerTime}>
-                {prayersMap[currentPrayer]?.iqama}
-              </Text>
+              <ShimmerPlaceholder
+                style={styles.prayerTimeContainer}
+                visible={!isPrayersLoading}
+              >
+                <Text style={styles.prayerTime}>
+                  {prayers[currentPrayer]?.iqama}
+                </Text>
+              </ShimmerPlaceholder>
             </View>
             <TouchableHighlight
               underlayColor="white"
@@ -279,9 +291,13 @@ const styles = StyleSheet.create({
     fontFamily: typography.FONT_FAMILY_REGULAR,
     fontSize: typography.FONT_SIZE_LARGE,
   },
+  prayerTimeContainer: {
+    justifyContent: "center",
+    flex: 4,
+    marginVertical: 16,
+  },
   prayerTime: {
-    flex: 3,
-    marginVertical: 12,
+    marginVertical: -4,
     fontFamily: typography.FONT_FAMILY_BOLD,
     fontSize: typography.FONT_SIZE_LARGE,
   },
