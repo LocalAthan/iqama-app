@@ -29,6 +29,7 @@ export default function App() {
   const [mosques, setMosques] = useState([]);
   const [currentMosque, setCurrentMosque] = useState();
   const [prayerTimes, setPrayerTimes] = useState();
+  const [currentPrayer, setCurrentPrayer] = useState("Fajr");
 
   const getMosques = async () => {
     try {
@@ -77,6 +78,15 @@ export default function App() {
     fetchData();
   }, [currentMosque]);
 
+  //TODO: make prayerTimes, currentMosque non-nullable
+  const prayersMap = {
+    "Fajr": prayerTimes?.fajr,
+    "Dhuhr": prayerTimes?.dhuhr,
+    "Asr": prayerTimes?.asr,
+    "Maghrib": prayerTimes?.maghrib,
+    "Isha": prayerTimes?.isha
+  }
+
   return !fontsLoaded ? (
     <View style={[styles.center]}>
       <ActivityIndicator size="large" />
@@ -87,13 +97,45 @@ export default function App() {
         <View style={styles.prayerBox}>
           <View style={styles.prayerBoxInfo}>
             <Text style={styles.prayerBoxMosque}>{currentMosque?.name}</Text>
+            <FlatList
+              data={Object.keys(prayersMap)}
+              renderItem={({ item: prayerName }) => (
+                <TouchableHighlight
+                  underlayColor="white"
+                  onPress={() => setCurrentPrayer(prayerName)}
+                >
+                  <View
+                    style={
+                      currentPrayer == prayerName
+                        ? styles.selectedPrayerContainer
+                        : styles.unselectedPrayerContainer
+                    }
+                  >
+                    <Text
+                      style={
+                        currentPrayer == prayerName
+                          ? styles.selectedPrayer
+                          : styles.unselectedPrayer
+                      }
+                    >
+                      {prayerName}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+              )}
+              horizontal={true}
+            ></FlatList>
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.prayerType}>Athan:</Text>
-              <Text style={styles.prayerTime}>{prayerTimes?.fajr.athan}</Text>
+              <Text style={styles.prayerCall}>Athan:</Text>
+              <Text style={styles.prayerTime}>
+                {prayersMap[currentPrayer]?.athan}
+              </Text>
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.prayerType}>Iqama:</Text>
-              <Text style={styles.prayerTime}>{prayerTimes?.fajr.iqama}</Text>
+              <Text style={styles.prayerCall}>Iqama:</Text>
+              <Text style={styles.prayerTime}>
+                {prayersMap[currentPrayer]?.iqama}
+              </Text>
             </View>
             <TouchableHighlight
               underlayColor="white"
@@ -231,7 +273,7 @@ const styles = StyleSheet.create({
     fontFamily: typography.FONT_FAMILY_REGULAR,
     fontSize: typography.FONT_SIZE_LARGE,
   },
-  prayerType: {
+  prayerCall: {
     flex: 1,
     marginVertical: 12,
     fontFamily: typography.FONT_FAMILY_REGULAR,
@@ -245,7 +287,8 @@ const styles = StyleSheet.create({
   },
   goNowButton: {
     flexDirection: "row",
-    marginVertical: 12,
+    marginTop: 16,
+    marginBottom: 12,
     height: 52,
     backgroundColor: "#F8F8F8",
     justifyContent: "center",
@@ -259,4 +302,32 @@ const styles = StyleSheet.create({
     color: "#6A6A6A",
   },
   openLinkImage: { marginLeft: 12, width: 15, height: 15 },
+  unselectedPrayerContainer: {
+    marginVertical: 12,
+    marginRight: 16,
+    borderWidth: 1,
+    borderColor: "lightgray",
+    borderRadius: 20,
+  },
+  unselectedPrayer: {
+    marginVertical: 6,
+    marginHorizontal: 16,
+    fontSize: typography.FONT_SIZE_LARGE,
+    color: "#6A6A6A",
+  },
+  selectedPrayerContainer: {
+    marginVertical: 12,
+    marginRight: 16,
+    borderWidth: 2,
+    borderColor: "#53A2EC",
+    borderRadius: 20,
+    backgroundColor: "#EAF4FD",
+  },
+  selectedPrayer: {
+    marginVertical: 6,
+    marginHorizontal: 16,
+    fontSize: typography.FONT_SIZE_LARGE,
+    fontFamily: typography.FONT_FAMILY_BOLD,
+    color: "#53A2EC",
+  },
 });
