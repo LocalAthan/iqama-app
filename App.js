@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   mosqueList: {
-    flex: 0.75,
+    flex: 0.5,
     backgroundColor: "white",
     paddingTop: 12,
     borderRadius: 25,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
   mosqueItem: {
     flexDirection: "row",
-    marginVertical: 12,
+    marginVertical: 6,
     marginHorizontal: 24,
   },
   mosqueInfo: {
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
   mosqueName: {
     flex: 1,
     fontFamily: typography.FONT_FAMILY_REGULAR,
-    fontSize: typography.FONT_SIZE_LARGE,
   },
   mosqueIcon: {
     flex: 1,
@@ -307,7 +306,6 @@ const styles = StyleSheet.create({
   },
   getDirectionsText: {
     marginVertical: 12,
-    fontSize: typography.FONT_SIZE_LARGE,
     fontWeight: "bold",
     color: "#6A6A6A",
   },
@@ -322,7 +320,6 @@ const styles = StyleSheet.create({
   unselectedPrayer: {
     marginVertical: 6,
     marginHorizontal: 16,
-    fontSize: typography.FONT_SIZE_LARGE,
     color: "#6A6A6A",
   },
   selectedPrayerContainer: {
@@ -336,7 +333,6 @@ const styles = StyleSheet.create({
   selectedPrayer: {
     marginVertical: 6,
     marginHorizontal: 16,
-    fontSize: typography.FONT_SIZE_LARGE,
     fontFamily: typography.FONT_FAMILY_BOLD,
     color: "#53A2EC",
   },
